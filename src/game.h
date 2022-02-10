@@ -15,6 +15,9 @@ class Game {
   int GetScore() const;
   int GetSize() const;
 
+  void SetStartOfHungryCycle();
+  std::chrono::time_point<std::chrono::system_clock> GetStartOfHungryCycle();
+
   void SetHungry(bool val);
   bool GetHungry() const;
 
@@ -30,6 +33,7 @@ class Game {
   Snake snake;
   SDL_Point food;
   SDL_Point hungry;
+  std::chrono::time_point<std::chrono::system_clock> _startOfHungryCycle;
 
   //bool _pauseGame;
   bool _isHungry{false};
@@ -49,6 +53,8 @@ class Game {
   void Update();
 
   void RestartGame();
+
+  bool hungryPhase();
 };
 
 #endif

@@ -95,13 +95,17 @@ void Game::Update() {
 
   snake.Update();
 
-  if(RandomBool(1000,900)){
+  if(RandomBool(10000,9990) && !_isHungry){
     PlaceHungry();
+    SetStartOfHungryCycle();
     SetHungry(true);
   }
-  else{
-    SetHungry(false);
+  bool stillHungry = hungryPhase();
+  if(!stillHungry){
+    SetHungry(stillHungry);
   }
+  
+
 
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
@@ -116,8 +120,10 @@ void Game::Update() {
   }
 
   // Check if there's hungry over here
-  if (hungry.x == new_x && hungry.y == new_y) {
-    // Grow snake and increase speed.
+  if (hungry.x == new_x && hungry.y == new_y && GetHungry()) {
+    // Shrink snake and let hungry disappear
+    std::cout << "!!!!!!!" << std::endl;
+    SetHungry(false);
     snake.ShrinkBody();
   }
 }
@@ -143,5 +149,28 @@ bool Game::RandomBool(int range, int threshold){
 int Game::GetScore() const { return score; }
 int Game::GetSize() const { return snake.size; }
 
-void Game::SetHungry(bool val){_isHungry = val; }
+void Game::SetHungry(bool val){
+  std::cout << "SetHungry set to " << _isHungry << std::endl;
+  _isHungry = val; 
+  }
 bool Game::GetHungry() const {return _isHungry;}
+
+void Game::SetStartOfHungryCycle(){
+  _startOfHungryCycle = std::chrono::system_clock::now();
+  }
+std::chrono::time_point<std::chrono::system_clock> Game::GetStartOfHungryCycle(){return _startOfHungryCycle;}
+
+// virtual function which is executed in a thread
+bool Game::hungryPhase()
+{
+  double timeInCycle = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - GetStartOfHungryCycle()).count();
+  //std::cout << timeInCycle << "\n";
+  if(timeInCycle >= 6000){
+      //SetStartOfHungryCycle();
+      return false;
+  }
+  return true;
+}
+
+
+//todo: remove hungry as soon as eaten
