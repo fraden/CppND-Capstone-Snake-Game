@@ -18,13 +18,22 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   Uint32 frame_duration;
   int frame_count = 0;
   bool running = true;
+  bool restart = false;
+  bool pause = false;
 
   while (running) {
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, snake);
-    Update();
+    controller.HandleInput(running, pause, restart, snake);
+    if(!pause){
+      Update();
+    }
+    if(restart){
+      RestartGame();
+      restart = false;
+    }
+    
     renderer.Render(snake, food);
 
     frame_end = SDL_GetTicks();
@@ -81,6 +90,13 @@ void Game::Update() {
     snake.GrowBody();
     snake.speed += 0.02;
   }
+}
+
+void Game::RestartGame(){
+  score = 0;
+  snake = Snake(snake.GetWidth(), snake.GetHeight());
+  PlaceFood();
+
 }
 
 int Game::GetScore() const { return score; }

@@ -15,9 +15,19 @@ class Game {
   int GetScore() const;
   int GetSize() const;
 
+/*   void setPause(bool val){
+      _pauseGame = val;
+  };
+
+  bool getPause(){
+      return _pauseGame;
+  }; */
+
  private:
   Snake snake;
   SDL_Point food;
+
+  //bool _pauseGame;
 
   std::random_device dev;
   std::mt19937 engine;
@@ -28,6 +38,8 @@ class Game {
 
   void PlaceFood();
   void Update();
+
+  void RestartGame();
 };
 
 #endif
