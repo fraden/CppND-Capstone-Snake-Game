@@ -166,11 +166,7 @@ bool Game::hungryPhase()
   double timeInCycle = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - GetStartOfHungryCycle()).count();
   //std::cout << timeInCycle << "\n";
   if(timeInCycle >= 6000){
-      //SetStartOfHungryCycle();
       return false;
   }
   return true;
 }
-
-
-//todo: remove hungry as soon as eaten
