@@ -34,7 +34,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
       restart = false;
     }
     
-    renderer.Render(snake, food);
+    renderer.Render(snake, food, hungry, GetHungry());
 
     frame_end = SDL_GetTicks();
 
@@ -74,10 +74,34 @@ void Game::PlaceFood() {
   }
 }
 
+
+void Game::PlaceHungry() {
+  int x, y;
+  while (true) {
+    x = random_w(engine);
+    y = random_h(engine);
+    // Check that the location is not occupied by a snake item before placing
+    // food.
+    if (!snake.SnakeCell(x, y) && x!= food.x && y!=food.y) {
+      hungry.x = x;
+      hungry.y = y;
+      return;
+    }
+  }
+}
+
 void Game::Update() {
   if (!snake.alive) return;
 
   snake.Update();
+
+  if(RandomBool(1000,900)){
+    PlaceHungry();
+    SetHungry(true);
+  }
+  else{
+    SetHungry(false);
+  }
 
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
@@ -90,6 +114,12 @@ void Game::Update() {
     snake.GrowBody();
     snake.speed += 0.02;
   }
+
+  // Check if there's hungry over here
+  if (hungry.x == new_x && hungry.y == new_y) {
+    // Grow snake and increase speed.
+    snake.ShrinkBody();
+  }
 }
 
 void Game::RestartGame(){
@@ -99,5 +129,19 @@ void Game::RestartGame(){
 
 }
 
+bool Game::RandomBool(int range, int threshold){
+  std::random_device rd;
+  std::mt19937 rng(rd());
+  std::uniform_int_distribution<int> uni(0, range);
+  auto randomNumber = uni(rng);
+  if(randomNumber>=threshold && GetSize()>=2){
+    return true;
+  }
+  return false;
+}
+
 int Game::GetScore() const { return score; }
 int Game::GetSize() const { return snake.size; }
+
+void Game::SetHungry(bool val){_isHungry = val; }
+bool Game::GetHungry() const {return _isHungry;}

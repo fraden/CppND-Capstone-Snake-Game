@@ -15,6 +15,9 @@ class Game {
   int GetScore() const;
   int GetSize() const;
 
+  void SetHungry(bool val);
+  bool GetHungry() const;
+
 /*   void setPause(bool val){
       _pauseGame = val;
   };
@@ -26,8 +29,10 @@ class Game {
  private:
   Snake snake;
   SDL_Point food;
+  SDL_Point hungry;
 
   //bool _pauseGame;
+  bool _isHungry{false};
 
   std::random_device dev;
   std::mt19937 engine;
@@ -37,6 +42,10 @@ class Game {
   int score{0};
 
   void PlaceFood();
+  void PlaceHungry();
+
+  bool RandomBool(int range, int threshold);
+
   void Update();
 
   void RestartGame();
