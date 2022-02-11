@@ -122,7 +122,6 @@ void Game::Update() {
   // Check if there's hungry over here
   if (hungry.x == new_x && hungry.y == new_y && GetHungry()) {
     // Shrink snake and let hungry disappear
-    std::cout << "!!!!!!!" << std::endl;
     SetHungry(false);
     snake->ShrinkBody();
   }
@@ -150,7 +149,6 @@ int Game::GetScore() const { return score; }
 int Game::GetSize() const { return snake->size; }
 
 void Game::SetHungry(bool val){
-  std::cout << "SetHungry set to " << _isHungry << std::endl;
   _isHungry = val; 
   }
 bool Game::GetHungry() const {return _isHungry;}
@@ -164,7 +162,6 @@ std::chrono::time_point<std::chrono::system_clock> Game::GetStartOfHungryCycle()
 bool Game::hungryPhase()
 {
   double timeInCycle = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - GetStartOfHungryCycle()).count();
-  //std::cout << timeInCycle << "\n";
   if(timeInCycle >= 6000){
       return false;
   }
