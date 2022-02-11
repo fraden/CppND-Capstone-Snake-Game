@@ -33,6 +33,14 @@ This is my starter repo for the Capstone project in the [Udacity C++ Nanodegree 
 4. Run it: `./SnakeGame`.
 
 
+## Rubric Points
+* project uses `shared_ptr` as a smart pointer, e.g. in line 15 in `renderer.h'
+* project accepts user input and processes the input, e.g. in line 39 in `controller.cpp`
+* project is using C++ functions and control structures, e.g. in line  9 in `game.cpp`
+* project uses Object Oriented Programming techniques, e.g. in `game.h`
+* project uses appropriate access specifiers for class members, e.g. in line 24, 25 in `game.h`
+* project uses encapsulate behavior, e.g. SDL_Point hungry is only accessible via Getters & Setters in `game.h`(line 24, 25, 34)
+
 ## CC Attribution-ShareAlike 4.0 International
 
 
