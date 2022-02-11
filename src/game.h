@@ -21,14 +21,6 @@ class Game {
   void SetHungry(bool val);
   bool GetHungry() const;
 
-/*   void setPause(bool val){
-      _pauseGame = val;
-  };
-
-  bool getPause(){
-      return _pauseGame;
-  }; */
-
  private:
   Snake snake;
   SDL_Point food;
