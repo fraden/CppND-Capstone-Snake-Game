@@ -2,6 +2,8 @@
 #define GAME_H
 
 #include <random>
+#include <memory>
+
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
@@ -22,7 +24,7 @@ class Game {
   bool GetHungry() const;
 
  private:
-  Snake snake;
+  std::shared_ptr<Snake> snake;
   SDL_Point food;
   SDL_Point hungry;
   std::chrono::time_point<std::chrono::system_clock> _startOfHungryCycle;

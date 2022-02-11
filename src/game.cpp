@@ -3,11 +3,11 @@
 #include "SDL.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height),
-      engine(dev()),
+    : engine(dev()),
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)) {
-  PlaceFood();
+      snake = std::make_shared<Snake>(grid_width, grid_height);
+      PlaceFood();
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -66,7 +66,7 @@ void Game::PlaceFood() {
     y = random_h(engine);
     // Check that the location is not occupied by a snake item before placing
     // food.
-    if (!snake.SnakeCell(x, y)) {
+    if (!snake->SnakeCell(x, y)) {
       food.x = x;
       food.y = y;
       return;
@@ -82,7 +82,7 @@ void Game::PlaceHungry() {
     y = random_h(engine);
     // Check that the location is not occupied by a snake item before placing
     // food.
-    if (!snake.SnakeCell(x, y) && x!= food.x && y!=food.y) {
+    if (!snake->SnakeCell(x, y) && x!= food.x && y!=food.y) {
       hungry.x = x;
       hungry.y = y;
       return;
@@ -91,9 +91,9 @@ void Game::PlaceHungry() {
 }
 
 void Game::Update() {
-  if (!snake.alive) return;
+  if (!snake->alive) return;
 
-  snake.Update();
+  snake->Update();
 
   if(RandomBool(10000,9990) && !_isHungry){
     PlaceHungry();
@@ -107,16 +107,16 @@ void Game::Update() {
   
 
 
-  int new_x = static_cast<int>(snake.head_x);
-  int new_y = static_cast<int>(snake.head_y);
+  int new_x = static_cast<int>(snake->head_x);
+  int new_y = static_cast<int>(snake->head_y);
 
   // Check if there's food over here
   if (food.x == new_x && food.y == new_y) {
     score++;
     PlaceFood();
     // Grow snake and increase speed.
-    snake.GrowBody();
-    snake.speed += 0.02;
+    snake->GrowBody();
+    snake->speed += 0.02;
   }
 
   // Check if there's hungry over here
@@ -124,13 +124,13 @@ void Game::Update() {
     // Shrink snake and let hungry disappear
     std::cout << "!!!!!!!" << std::endl;
     SetHungry(false);
-    snake.ShrinkBody();
+    snake->ShrinkBody();
   }
 }
 
 void Game::RestartGame(){
   score = 0;
-  snake = Snake(snake.GetWidth(), snake.GetHeight());
+  snake = std::make_shared<Snake>(snake->GetWidth(), snake->GetHeight());
   PlaceFood();
 
 }
@@ -147,7 +147,7 @@ bool Game::RandomBool(int range, int threshold){
 }
 
 int Game::GetScore() const { return score; }
-int Game::GetSize() const { return snake.size; }
+int Game::GetSize() const { return snake->size; }
 
 void Game::SetHungry(bool val){
   std::cout << "SetHungry set to " << _isHungry << std::endl;
